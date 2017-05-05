@@ -14,18 +14,22 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+		
       	<% if (!isEmpty(folders)){
 			for(item in folders["0"]){
+				
 				var childs = folders[item.id+''];
 				if(isEmpty(childs)) {
 		%>
 				<% if(item.type==1){ %>
+				
 				<li class="${flyfox.isNew(item.update_time,7)?'q-newicon':''} ${item.id==folders_selected!''?'active':''} "><a href="${BASE_PATH }${flyfox.getMenu(item.id)}.html">${item.name}</a></li>
 				<% } else if(item.type==2){ %>
 				<li class="${flyfox.isNew(item.update_time,7)?'q-newicon':''}  ${item.id==folders_selected!''?'active':''} "><a href="${strutil.startWith(item.jump_url,'http')?'':BASE_PATH}${item.jump_url}">${item.name}</a></li>
 				<% } else if(item.type==3){ %>
 				<li class="${flyfox.isNew(item.update_time,7)?'q-newicon':''}  ${item.id==folders_selected!''?'active':''} "><a href="${strutil.startWith(item.jump_url,'http')?'':BASE_PATH}${item.jump_url}" target="_blank">${item.name}</a></li>
-				<% } else if(item.type==4){ %>
+				<!-- <li class="${flyfox.isNew(item.update_time,7)?'q-newicon':''}  ${item.id==folders_selected!''?'active':''} "><a href="${BASE_PATH }front/article" target="_blank">${item.name}</a></li> -->
+				<% break;} else if(item.type==4){ %>
 				${item.jump_url}
 				<% } %>
 		<% 		
@@ -39,7 +43,7 @@
 					<% if(childsItem.type==1){ %>
 					<li class="${flyfox.isNew(childsItem.update_time,7)?'q-newicon':''} ${childsItem.id==folders_selected!''?'active':''} "><a href="${BASE_PATH }${flyfox.getMenu(childsItem.id)}.html">${childsItem.name}</a></li>
 					<% } else if(childsItem.type==2){ %>
-					<li class="${flyfox.isNew(childsItem.update_time,7)?'q-newicon':''}  ${childsItem.id==folders_selected!''?'active':''} "><a href="${strutil.startWith(childsItem.jump_url,'http')?'':BASE_PATH}${childsItem.jump_url}">${childsItem.name}</a></li>
+					<li class="${flyfox.isNew(childsItem.update_time,7)?'q-newicon':''}  ${childsItem.id==folders_selected!''?'active':''} "><a href="${strutil.startWith(childsItem.jump_url,'http')?'':BASE_PATH}${childsItem.jump_url}">${childsItem.name}jj</a></li>
 					<% } else if(childsItem.type==3){ %>
 					<li class="${flyfox.isNew(childsItem.update_time,7)?'q-newicon':''}  ${childsItem.id==folders_selected!''?'active':''} "><a href="${strutil.startWith(childsItem.jump_url,'http')?'':BASE_PATH}${childsItem.jump_url}" target="_blank">${childsItem.name}</a></li>
 					<% } else if(childsItem.type==4){ %>

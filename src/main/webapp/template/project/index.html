@@ -1,6 +1,6 @@
 <%
 // 获取前20个文章
-var articlePage = temp.articlePage(1, 100, session.site.model.site_folder_id);
+var articlePage = temp.articlePage(1, 100, 230);
 %>
 
 <% 
@@ -8,21 +8,30 @@ var articlePage = temp.articlePage(1, 100, session.site.model.site_folder_id);
 %>
 	<% include("/template/project/includes/header.html"){} %>
 	
-	<script type="text/javascript" src="${BASE_PATH }template/project/article/show_article.js"></script>
 	<style>
-	#project_thumbnail {
-		height: 250px;
-		width: 100%;
-		display: block;
+	/* Centered texts in each section
+	* --------------------------------------- */
+	.section{
+		text-align:center;
+		background-size: cover;
 	}
-	
-	@media (max-width:991px) {
-	    #project_thumbnail {
-			height: 16em;
-			width: 100%;
-			display: block;
-		}
+
+	.section{
+		/* background-image: url(bg1.jpg); */
+		padding: 2% 0 0 0;
 	}
+
+	.section p{
+		 color: #FFF;
+	}
+
+	/* Defining each sectino background and styles
+	* --------------------------------------- */
+	#fullpage {
+	  font: 400 18px/1.62 "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif;
+	  color: #111;
+	}
+
 	</style>
 <%
 };
@@ -30,52 +39,21 @@ var articlePage = temp.articlePage(1, 100, session.site.model.site_folder_id);
 var bodyContent = {
 %>
 <%  include("/template/project/includes/header_menu.html"){} %>	
-	
-
 <div class="container">
-	<div class="row">
-	
+				<ul class="nav navbar-nav navbar-right">
+					<% for(item in articlePage.list){ %>
+						<li id="nav_j${item.id}"><a href="#j${item.id}">${item.title}</a></li>
+					<% } %>
+				</ul>
+			</div>
+<div id="fullpage">
 		<% for(item in articlePage.list){ %>
-			<% 
-		  	  // 图片设置
-		  	  var picName ="";
-		  	  if(strutil.isNotEmpty(item.image_url) || strutil.isNotEmpty(item.image_net_url) ) { 
-		  	  	picName = flyfox.getImage(item);
-				if(!strutil.startWith(picName , 'http')) {
-					picName = BASE_PATH + picName;
-				}
-		  	  } else if(flyfox.getNow()==item.publish_time){ // 当天图片
-		  	   	picName = BASE_PATH + "static/front/images/today.jpg";
-		  	  } else if(strutil.isNotEmpty(defalutimg!'')) { // 默认图片，可设置
-		  	  	picName = BASE_PATH + defalutimg;
-		  	  } else { // 什么都没有~！~
-		  	  	picName = BASE_PATH + "static/front/images/documents.png";	
-			  }
-			  %>
-			<div class="col-sm-6 col-md-4">
-			    <div class="thumbnail">
-			      <a href="${BASE_PATH }front/article/${item.id}.html" target="_blank" title="${item.title}"><img src="${picName}" id="project_thumbnail" alt="${item.title}"></a>
-			      <div class="caption">
-			        <h4>
-			        <a href="${BASE_PATH }front/article/${item.id}.html" target="_blank" title="${item.title}">
-			        <% if (strutil.length(item.title) > 18) { %>
-							${strutil.subStringTo(item.title, 0, 18)}...
-					<% 	} else { %>
-							${item.title}
-					<%  } %>
-					</a>
-			        </h4>
-			        <% var article_content = flyfox.showHTML(item.content!'',80,'  ......'); %>
-			        <p style="height: 62px;overflow: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;${article_content!'' }</p>
-			        <p><a href="${BASE_PATH }front/article/${item.id}.html" class="btn btn-link" role="button">查看全部</a></p>
-			      </div>
-			    </div>
+			<div class="section" id="section${itemLP.index}" style="background-image: url('static/template/website/images/bg${itemLP.index}.jpg');">
+				${item.content!}
 			</div>
 		<% } %>
-	
-	  </div>
-</div>
-
+		
+	</div>
 
 <%  include("/template/project/includes/footer.html"){} %>
 	
@@ -85,3 +63,29 @@ var bodyContent = {
 
 <% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
 <%} %>
+<script type="text/javascript">
+var anchorsArray = [];
+var navigationTooltipsArray = [];
+<% for(item in articlePage.list){ %>
+	anchorsArray.push('j${item.id}');
+	navigationTooltipsArray.push('${item.title}');
+<% } %>
+
+console.log()
+	$(document).ready(
+			function() {
+				$('#fullpage').fullpage({
+					anchors : anchorsArray, //[ 'j0','j1', 'j2','j3','j4','j5','j6'  ],
+					navigation : true,
+					navigationPosition : 'right',
+					navigationTooltips :  navigationTooltipsArray
+					,afterLoad: function(anchorLink, index){
+						$('ul.nav li').removeClass('active');
+						$('ul.nav li#nav_'+anchorLink).addClass('active');
+
+					}
+				});
+			});
+</script>
+<script type="text/javascript" src="http://cdn.bootcss.com/fullPage.js/2.7.6/jquery.fullPage.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/fullPage.js/2.7.6/jquery.fullPage.min.css" />

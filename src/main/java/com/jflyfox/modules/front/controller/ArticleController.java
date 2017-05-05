@@ -12,6 +12,8 @@ import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.modules.admin.article.TbArticle;
 import com.jflyfox.modules.admin.comment.TbComment;
 import com.jflyfox.modules.admin.folder.FolderService;
+import com.jflyfox.modules.admin.folder.TbFolder;
+import com.jflyfox.modules.admin.site.SessionSite;
 import com.jflyfox.modules.admin.tags.TbTags;
 import com.jflyfox.modules.front.interceptor.FrontInterceptor;
 import com.jflyfox.modules.front.service.FrontCacheService;
@@ -36,6 +38,17 @@ public class ArticleController extends BaseProjectController {
 	 */
 	@Before(FrontInterceptor.class)
 	public void index() {
+		SessionSite site = getSessionSite();
+		String siteFolderId = site.getModel().getSiteFolderId()+"";
+		
+		List<TbArticle> articleList = TbArticle.dao.find("select * from tb_article " //
+				+ "where folder_id = ?",siteFolderId);
+		setAttr("item", articleList);
+		renderAuto(path + "articleList.html");
+	}
+	
+	@Before(FrontInterceptor.class)
+	public void view(){
 		// 数据列表
 		int articleId = getParaToInt();
 
